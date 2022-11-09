@@ -1,6 +1,6 @@
 '''
 Date: 2022-10-31 17:40:44
-LastEditTime: 2022-11-09 22:29:59
+LastEditTime: 2022-11-09 22:44:22
 FilePath: \Project\OTTM\data\dataTodatabase.py
 
 将药物相关的信息储存到数据库中
@@ -441,3 +441,17 @@ for i in drug_c_not_relevant:
     b.append({'name':i})
     
 a = drug_frequency_list()    
+
+
+
+#TODO 明天将整个target树进行补全，后续对于每个target对应的药物做同样的处理
+
+
+
+
+
+
+
+
+
+
