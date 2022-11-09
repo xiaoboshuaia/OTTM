@@ -1,6 +1,6 @@
 '''
 Date: 2022-10-31 17:40:44
-LastEditTime: 2022-11-09 21:50:23
+LastEditTime: 2022-11-09 22:21:20
 FilePath: \Project\OTTM\data\dataTodatabase.py
 
 将药物相关的信息储存到数据库中
