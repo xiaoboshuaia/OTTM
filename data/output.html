@@ -1,17 +1,16 @@
 <!DOCTYPE html>
+
 <html>
-
 <head>
-  <meta charset="utf-8" />
-  <title>ECharts</title>
-  <!-- 引入刚刚下载的 ECharts 文件 -->
-  <script src="echarts.js"></script>
+<meta charset="utf-8"/>
+<title>ECharts</title>
+<!-- 引入刚刚下载的 ECharts 文件 -->
+<script src="echarts.js"></script>
 </head>
-
 <body>
-  <!-- 为 ECharts 准备一个定义了宽高的 DOM -->
-  <div id="chart-container" style="width: 1000px;height: 1000px;"></div>
-  <script type="text/javascript">
+<!-- 为 ECharts 准备一个定义了宽高的 DOM -->
+<div id="chart-container" style="width: 1000px;height: 1000px;"></div>
+<script type="text/javascript">
     var dom = document.getElementById('chart-container');
     var myChart = echarts.init(dom, null, {
       renderer: 'svg',
@@ -51,8 +50,8 @@
           },
           data: [
           <!-- TODO name加上数量 字体加粗  三个独立的饼图  compound标签外挂-->
-            { value: 'Compound data', name: 'Compound' },   
-            { value: 'No-drug data', name: 'No-drug' }
+            { value: '247', name: 'Compound' },   
+            { value: '1263', name: 'No-drug' }
           ]
         },
         {
@@ -95,9 +94,9 @@
             }
           },
           data: [
-            { value: 'FDA Approved data', name: 'FDA Approved' },
-            { value: 'Others data', name: 'Others' },
-            { value: 'Clinical data', name: 'Clinical' }
+            { value: '33', name: 'FDA Approved' },
+            { value: '136', name: 'Others' },
+            { value: '78', name: 'Clinical' }
           ]
         }
       ]
@@ -111,5 +110,4 @@
 
   </script>
 </body>
-
 </html>

@@ -1,0 +1,289 @@
+<!--
+	此示例下载自 https://echarts.apache.org/examples/zh/editor.html?c=tree-legend
+-->
+<!DOCTYPE html>
+<html lang="zh-CN" style="height: 100%">
+
+<head>
+  <meta charset="utf-8">
+</head>
+
+<body style="height: 100%; margin: 0">
+  <div id="container" style="height: 100%"></div>
+
+
+  <script type="text/javascript" src="https://fastly.jsdelivr.net/npm/echarts@5.4.0/dist/echarts.min.js"></script>
+  <!-- Uncomment this line if you want to dataTool extension
+  <script type="text/javascript" src="https://fastly.jsdelivr.net/npm/echarts@5.4.0/dist/extension/dataTool.min.js"></script>
+  -->
+  <!-- Uncomment this line if you want to use gl extension
+  <script type="text/javascript" src="https://fastly.jsdelivr.net/npm/echarts-gl@2/dist/echarts-gl.min.js"></script>
+  -->
+  <!-- Uncomment this line if you want to echarts-stat extension
+  <script type="text/javascript" src="https://fastly.jsdelivr.net/npm/echarts-stat@latest/dist/ecStat.min.js"></script>
+  -->
+  <!-- Uncomment this line if you want to use map
+  <script type="text/javascript" src="https://fastly.jsdelivr.net/npm/echarts@4.9.0/map/js/china.js"></script>
+  <script type="text/javascript" src="https://fastly.jsdelivr.net/npm/echarts@4.9.0/map/js/world.js"></script>
+  -->
+  <!-- Uncomment these two lines if you want to use bmap extension
+  <script type="text/javascript" src="https://api.map.baidu.com/api?v=3.0&ak=YOUR_API_KEY"></script>
+  <script type="text/javascript" src="https://fastly.jsdelivr.net/npm/echarts@5.4.0/dist/extension/bmap.min.js"></script>
+  -->
+
+  <script type="text/javascript">
+    var dom = document.getElementById('container');
+    var myChart = echarts.init(dom, null, {
+      renderer: 'canvas',
+      useDirtyRect: false
+    });
+    var app = {};
+
+    var option;
+
+    myChart.showLoading();
+    const data = {
+      name: 'Target',
+      children: [
+        {
+          name: 'FDA Approved',
+          children: [
+            {
+              name: 'Not relevant',
+              value: 18,
+              children: [
+                { 'name': 'LOX5' },
+                { 'name': 'ARSB' },
+                { 'name': 'FIBA' },
+                { 'name': 'AGAL' },
+                { 'name': 'PP2BA' },
+                { 'name': 'TBB2A' },
+                { 'name': 'KITH' },
+                { 'name': 'BIEA' },
+                { 'name': 'RIR2' },
+                { 'name': 'KSYK' },
+                { 'name': 'RIR1' },
+                { 'name': 'FKB1A' },
+                { 'name': 'CP17A' },
+                { 'name': 'IMDH2' },
+                { 'name': 'FCERG' },
+                { 'name': 'MPRD' },
+                { 'name': 'PUR1' },
+                { 'name': 'MRM2' }
+              ]
+            },
+            {
+              name: 'Relevant',
+              value: 15
+            }
+          ]
+        },
+        {
+          name: 'Clinical',
+          children: [
+            {
+              name: 'Not relevant',
+              value: 31,
+              children: [
+                { 'name': 'ULA1' },
+                { 'name': 'S10AC' },
+                { 'name': 'MMP8' },
+                { 'name': 'SIR1' },
+                { 'name': 'FAK1' },
+                { 'name': 'AT2A2' },
+                { 'name': 'PDCD2' },
+                { 'name': 'ADA10' },
+                { 'name': 'BASI' },
+                { 'name': 'RASN' },
+                { 'name': 'PPGB' },
+                { 'name': 'S10A9' },
+                { 'name': 'ELNE' },
+                { 'name': 'KPCD' },
+                { 'name': 'MK01' },
+                { 'name': 'MPRI' },
+                { 'name': 'P2RX4' },
+                { 'name': 'MK14' },
+                { 'name': 'SYEP' },
+                { 'name': 'PYRG1' },
+                { 'name': 'CATC' },
+                { 'name': 'CFAH' },
+                { 'name': 'LEG3' },
+                { 'name': 'PUR2' },
+                { 'name': 'PNPH' },
+                { 'name': 'TFPI1' },
+                { 'name': 'ANM5' },
+                { 'name': 'TENA' },
+                { 'name': 'CATG' },
+                { 'name': 'HS90B' },
+                { 'name': 'PSN2' }
+              ]
+            },
+            {
+              name: 'Relevant',
+              value: 47
+            }
+
+
+          ]
+        },
+
+      ]
+    };
+    var data2 = {
+      name: 'LOX5',
+      children: [
+        {
+          name: 'Approved',
+          children: [{
+            name: 'Not relevant',
+            children: [
+            ]
+          },
+          {
+            name: 'Relevant',
+            children: [{ name: 'Diethylcarbamazine' },
+            { name: 'Zileuton' }
+            ]
+          }
+          ]
+        },
+        {
+          name: 'Clinical trial',
+          children: [{
+            name: 'Not relevant',
+            children: [
+              { 'name': 'Tipelukast' },
+              { 'name': 'WY-50295-tromethamine' },
+              { 'name': 'CMI-392' },
+              { 'name': 'TA-270' },
+              { 'name': 'BF-389' },
+              { 'name': 'UCB-35440' },
+              { 'name': 'Rilopirox' },
+              { 'name': 'TENIDAP' },
+              { 'name': 'SKF-105809' },
+              { 'name': 'PF-4191834' },
+              { 'name': 'FPL-62064' },
+              { 'name': 'PTC299' },
+              { 'name': 'Darbufelone' },
+              { 'name': 'Tepoxalin' },
+              { 'name': 'Flobufen' },
+              { 'name': 'MK-866' },
+              { 'name': 'BIM23A760' },
+              { 'name': 'ABT-761' }
+            ]
+
+          },
+          {
+            name: 'Relevant',
+            children: [{ 'name': 'Silymarin' }, { 'name': 'E-6700' }, { 'name': 'Avastin+/-Tarceva' }
+            ]
+          }
+          ]
+        },
+      ]
+    };
+    myChart.hideLoading();
+    myChart.setOption(
+      (option = {
+        tooltip: {
+          trigger: 'item',
+          triggerOn: 'mousemove'
+
+        },
+        legend: {
+          top: '2%',
+          left: '3%',
+          orient: 'vertical',
+          data: [
+            {
+              name: 'Target',
+              icon: 'rectangle'
+            },
+            {
+              name: 'LOX5',
+              icon: 'rectangle'
+            }
+          ],
+          borderColor: '#c23531'
+        },
+        series: [
+          {
+            type: 'tree',
+            name: 'Target',
+            data: [data],
+            top: '5%',
+            left: '7%',
+            bottom: '2%',
+            right: '60%',
+            symbolSize: 10,
+            label: {
+              position: 'left',
+              verticalAlign: 'middle',
+              align: 'right',
+              textStyle: {
+                color: '#48466d',
+                fontSize: 20,
+                fontWeight: 'bold'
+              }
+            },
+            leaves: {
+              label: {
+                position: 'right',
+                verticalAlign: 'middle',
+                align: 'left'
+              }
+            },
+            emphasis: {
+              focus: 'descendant'
+            },
+            expandAndCollapse: true,
+            animationDuration: 550,
+            animationDurationUpdate: 750
+          },
+          {
+            type: 'tree',
+            name: 'LOX5',
+            data: [data2],
+            top: '20%',
+            left: '60%',
+            bottom: '22%',
+            right: '18%',
+            symbolSize: 7,
+            label: {
+              position: 'left',
+              verticalAlign: 'middle',
+              align: 'right',
+              textStyle: {
+                color: '#48466d',
+                fontSize: 20,
+                fontWeight: 'bold'
+              }
+            },
+            leaves: {
+              label: {
+                position: 'right',
+                verticalAlign: 'middle',
+                align: 'left'
+              }
+            },
+            expandAndCollapse: true,
+            emphasis: {
+              focus: 'descendant'
+            },
+            animationDuration: 550,
+            animationDurationUpdate: 750,
+
+          }
+        ]
+      })
+    );
+
+    if (option && typeof option === 'object') {
+      myChart.setOption(option);
+    }
+
+    window.addEventListener('resize', myChart.resize);
+  </script>
+</body>
+
+</html>
