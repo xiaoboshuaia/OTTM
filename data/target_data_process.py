@@ -1,6 +1,6 @@
 '''
 Date: 2022-10-31 17:40:44
-LastEditTime: 2022-11-09 08:59:49
+LastEditTime: 2022-11-09 22:29:59
 FilePath: \Project\OTTM\data\dataTodatabase.py
 
 将药物相关的信息储存到数据库中
@@ -138,28 +138,15 @@ def get_file_uniPortName():
 def get_output(uniprotName):
     target_have_drug = []
     target_FDA_approved = []
-    target_research = []
     target_clinical_trial = []
     for name in uniprotName:
         if name in uniPortName_to_target.keys():
-            if ('Successful target' in [*uniPortName_to_target[name].values()]
-                ) or (
-                'Research target' in [*uniPortName_to_target[name].values()]
-                ) or (
-                'Clinical Trial target' in [*uniPortName_to_target[name].values()]
-            ):
-                target_have_drug.append([*uniPortName_to_target[name].keys()][0])
+            target_have_drug.append([*uniPortName_to_target[name].keys()][0])
             if 'Successful target' in [*uniPortName_to_target[name].values()]:
                 target_FDA_approved.append([*uniPortName_to_target[name].keys()][0])
-            if 'Research target' in [*uniPortName_to_target[name].values()]:
-                target_research.append([*uniPortName_to_target[name].keys()][0])
             if 'Clinical Trial target' in [*uniPortName_to_target[name].values()]:
-                target_clinical_trial.append([*uniPortName_to_target[name].keys()][0])
-    target_have_drug = len(target_have_drug)
-    target_FDA_approved = len(target_FDA_approved)
-    target_research = len(target_research)
-    target_clinical_trial = len(target_clinical_trial)   
-    return target_have_drug, target_FDA_approved, target_research, target_clinical_trial
+                target_clinical_trial.append([*uniPortName_to_target[name].keys()][0])  
+    return target_have_drug, target_FDA_approved,  target_clinical_trial
 
 # 获得转化数据
 def get_translate_data():
@@ -177,11 +164,11 @@ def get_translate_data():
 def output_html():
     text_html = open(r'template.html', 'r', encoding='utf-8').read()
     text_html = text_html.replace(
-                    'Compound data',str(target_have_drug)).replace(
+                    'Compound data',str(len(target_have_drug))).replace(
                         'No-drug data',str(target_no_drug)).replace(
-                            'FDA Approved data',str(target_FDA_approved)).replace(
-                                'Research data',str(target_research)).replace(
-                                    'Clinical data',str(target_clinical_trial))
+                            'FDA Approved data',str(len(target_FDA_approved))).replace(
+                                'Others data',str(target_others)).replace(
+                                    'Clinical data',str(len(target_clinical_trial)))
 
     soup = BeautifulSoup(text_html, 'html.parser')
     with open(r'output.html', 'w', encoding='utf-8') as fp:
@@ -231,6 +218,186 @@ def elasticSearchData():
 uniprotId_to_geneName = get_geneID()
 
 '''
+'''
+通过输入一个target的名称,返回该target的所有相关的靶标数据和药物数据
+
+'''
+# 通过循环来进行查询
+def query(uni_ID,uni_Name):
+    body = {
+        'query':{
+            'query_string':{
+                'query': uni_ID + ' OR ' + uni_Name + ' AND hepatocellular carcinoma',
+                'fields': ['abstract']
+            }
+        }    
+    }
+    res = es.search(index='abstract', body=body, scroll='5m')
+    return res['hits']['total']['value']
+
+# 获得FDA批准的靶标并且没有研究过肝癌
+def FDA_approved_drug():
+    target_FDA_name = [] 
+    for key,value in uniPortName_to_target.items():
+        if [*value.keys()][0] in target_FDA_approved:
+            target_FDA_name.append(key) 
+
+    re_target = []
+    unre_target = []
+    for i in target_FDA_name:
+        print(i)
+        number = query(uniPortName_to_uniPortId[i],i)
+        if number == 0:
+            unre_target.append(i)
+        else:
+            re_target.append(i)
+    dict1 = []
+    for i in unre_target:
+        dict1.append({'name' : i })    
+    return len(unre_target),unre_target,dict1 
+
+# 获得Clinical trial阶段的靶标且没有研究过肝癌
+def Clinical_trial_drug():
+    target_clinical_name = [] 
+    for key,value in uniPortName_to_target.items():
+        if [*value.keys()][0] in target_clinical_trial:
+            target_clinical_name.append(key) 
+
+    cl_re_target = []
+    cl_unre_target = []
+    for i in target_clinical_name:
+        print(i)
+        number = query(uniPortName_to_uniPortId[i],i)
+        if number == 0:
+            cl_unre_target.append(i)
+        else:
+            cl_re_target.append(i)
+            
+    len(cl_unre_target) 
+
+    dict1 = []
+    for i in cl_unre_target:
+        dict1.append({'name' : i })
+    return len(cl_unre_target),cl_unre_target,dict1
+
+# 通过phase将药物进行分类
+def drug_classify(target_name):
+    drug_phase = {'Approved':[],'Clinical_trial':[],'Others':[]}
+    # 'T00140'
+    drug_ap_cl = []
+    drug_ap = []
+    drug_cl = []
+    for key,value in target_to_drug[target_name].items():
+        if value == 'Approved':
+            drug_phase['Approved'].append({
+                'name':key
+            })
+            drug_ap_cl.append(key)
+            drug_ap.append(key)
+        elif value.startswith('Phase'):
+            drug_phase['Clinical_trial'].append({
+                'name':key
+            })
+            drug_ap_cl.append(key)
+            drug_cl.append(key)
+        else:
+            drug_phase['Others'].append({
+                'name':key
+            })
+    return drug_phase,drug_ap_cl,drug_ap,drug_cl
+
+# 通过循环来进行查询药物
+def queryDrug(drug_name):
+    if '+/-' in drug_name:
+        drug_name = drug_name.replace('+/-',' ')
+        body = {
+        'query':{
+            'query_string':{
+                'query':  drug_name + ' AND hepatocellular carcinoma',
+                'fields': ['abstract']
+            }
+        }    
+    }
+        res = es.search(index='abstract', body=body, scroll='5m')
+    else:
+        body = {
+            'query':{
+                'query_string':{
+                    'query':  drug_name + ' AND hepatocellular carcinoma',
+                    'fields': ['abstract'],
+                    'default_operator': 'AND',
+                }
+            }    
+        }
+        res = es.search(index='abstract', body=body, scroll='5m')
+    return res['hits']['total']['value']
+
+# 将药物通过approved和clinical和是否有研究过肝癌进行分类
+def drug_classify_final():
+    drug_classify_final = {'Approved':{'Not relevant':[],'Relevant': []},
+                        'Clinical_trial':{'Not relevant':[],'Relevant': []}}
+    ok_drug = []
+    no_drug = []
+    for i in drug_ap_cl:
+        number = queryDrug(i)
+        print(number)
+        if number == 0:
+            ok_drug.append(i)
+        else:
+            no_drug.append(i)
+
+    for i in drug_ap_cl:
+        if i in ok_drug and i in drug_ap:
+            drug_classify_final['Approved']['Not relevant'].append(i)
+        elif i in ok_drug and i in drug_cl:
+            drug_classify_final['Clinical_trial']['Not relevant'].append(i)
+        elif i in no_drug and i in drug_ap:
+            drug_classify_final['Approved']['Relevant'].append(i)
+        elif i in no_drug and i in drug_cl:
+            drug_classify_final['Clinical_trial']['Relevant'].append(i)
+    return drug_classify_final   
+
+# 通过循环来进行查询药物频率(热度)
+def query_Drug_frequency(drug_name):
+    drug_name = drug_name.replace('+/-',' ')
+    body = {
+        'query':{
+            'query_string':{
+                'query':  drug_name ,
+                'fields': ['abstract']
+            }
+        }    
+    }
+    res = es.search(index='abstract', body=body, scroll='5m')
+    return res['hits']['total']['value']
+
+# 获得所有未研究过肝癌的药物
+def get_drug_frequency():
+    drug_classify_final_data = drug_classify_final()
+    drug_a_not_relevant = []
+    drug_c_not_relevant = []
+    drug_not_relevant = []
+    for i in drug_classify_final_data['Approved']['Not relevant']:
+        drug_a_not_relevant.append(i)
+        drug_not_relevant.append(i)
+    for i in drug_classify_final_data['Clinical_trial']['Not relevant']:
+        drug_c_not_relevant.append(i)
+        drug_not_relevant.append(i)
+    drug_frequency = []
+    for i in drug_not_relevant:
+        frequency = query_Drug_frequency(i)
+        drug_frequency.append(frequency)
+    return drug_a_not_relevant,drug_c_not_relevant,drug_not_relevant,drug_frequency
+
+
+# 将数据处理成为echarts所需要的格式 
+def drug_frequency_list():
+    data = []
+    for i in range(len(drug_frequency)):
+        data.append([drug_not_relevant[i],drug_frequency[i]])
+    return data   
+
+
 if __name__ == '__main__':
     (uniPortName_to_uniPortId, 
         uniPortId_to_uniPorName, 
@@ -241,13 +408,36 @@ if __name__ == '__main__':
     geneName_to_uniprotId = geneNameToUniprotId(get_txt()) # geneName 转化为 uniprotId
     file_uniprotName = get_file_uniPortName() # 获得输入文件的uniPortName
     
-    target_have_drug, target_FDA_approved, target_research, target_clinical_trial = get_output(file_uniprotName)
-    target_no_drug = len(file_uniprotName) - target_have_drug
+    target_have_drug, target_FDA_approved,  target_clinical_trial = get_output(file_uniprotName)
+    target_no_drug = len(file_uniprotName) - len(target_have_drug)
+    target_others = len(target_have_drug) - len(target_FDA_approved) - len(target_clinical_trial)
     
     output_html()
 
 
+# hepatocellular carcinoma
+# 将有药物的target对于早期肺癌在进行一次筛选 找出没有研究过跟该疾病有关的靶标
+    es = Elasticsearch(timeout=30, max_retries=10, retry_on_timeout=True)
+    es.search(index = 'abstract', query={})
 
 
 
+drug_phase,drug_ap_cl,drug_ap,drug_cl = drug_classify('T00140')
+drug_a_not_relevant,drug_c_not_relevant,drug_not_relevant,drug_frequency = get_drug_frequency()
 
+drug_frequency
+
+query_Drug_frequency('WY-50295-tromethamine')
+
+
+c= []
+for i in drug_cl:
+    if i not in drug_c_not_relevant:
+        c.append({'name':i})
+        
+        
+b= []
+for i in drug_c_not_relevant:
+    b.append({'name':i})
+    
+a = drug_frequency_list()    
