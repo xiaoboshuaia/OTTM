@@ -1,6 +1,6 @@
 '''
 Date: 2022-10-31 17:40:44
-LastEditTime: 2022-11-09 22:21:20
+LastEditTime: 2022-11-09 22:29:59
 FilePath: \Project\OTTM\data\dataTodatabase.py
 
 将药物相关的信息储存到数据库中
@@ -331,7 +331,7 @@ def queryDrug(drug_name):
         }
         res = es.search(index='abstract', body=body, scroll='5m')
     return res['hits']['total']['value']
-queryDrug('WY-50295-tromethamine')
+
 # 将药物通过approved和clinical和是否有研究过肝癌进行分类
 def drug_classify_final():
     drug_classify_final = {'Approved':{'Not relevant':[],'Relevant': []},
@@ -356,7 +356,7 @@ def drug_classify_final():
         elif i in no_drug and i in drug_cl:
             drug_classify_final['Clinical_trial']['Relevant'].append(i)
     return drug_classify_final   
-aa = drug_classify_final()
+
 # 通过循环来进行查询药物频率(热度)
 def query_Drug_frequency(drug_name):
     drug_name = drug_name.replace('+/-',' ')
