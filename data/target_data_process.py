@@ -1,6 +1,6 @@
 '''
 Date: 2022-10-31 17:40:44
-LastEditTime: 2022-11-10 10:19:06
+LastEditTime: 2022-11-10 16:03:37
 FilePath: \Project\OTTM\data\dataTodatabase.py
 
 将药物相关的信息储存到数据库中
@@ -332,7 +332,7 @@ def queryDrug(drug_name):
                 'query_string':{
                     'query':  drug_name + ' AND hepatocellular carcinoma',
                     'fields': ['abstract'],
-                    'default_operator': 'AND',
+                    'default_operator': 'AND', # 这里很关键将默认的OR改为AND可以明显的提升查询的质量
                 }
             }    
         }
