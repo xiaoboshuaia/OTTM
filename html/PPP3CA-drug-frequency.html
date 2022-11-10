@@ -1,4 +1,12 @@
 <!--
+ * @Author: yxb 973801194@qq.com
+ * @Date: 2022-11-10 10:29:19
+ * @LastEditors: yxb 973801194@qq.com
+ * @LastEditTime: 2022-11-10 10:42:39
+ * @FilePath: \Project\OTTM\html\PPP3CA-drug-frequency.html
+ * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
+-->
+<!--
 	此示例下载自 https://echarts.apache.org/examples/zh/editor.html?c=data-transform-sort-bar
 -->
 <!DOCTYPE html>
@@ -46,24 +54,10 @@
         {
           dimensions: ['drug', 'frequency'],
           source: [
-            ['Tipelukast', 1],
-            ['WY-50295-tromethamine', 2144],
-            ['CMI-392', 10522],
-            ['TA-270', 53111],
-            ['BF-389', 19924],
-            ['UCB-35440', 2887],
-            ['Rilopirox', 16],
-            ['TENIDAP', 153],
-            ['SKF-105809', 4987],
-            ['PF-4191834', 20872],
-            ['FPL-62064', 1333],
-            ['PTC299', 8],
-            ['Darbufelone', 7],
-            ['Tepoxalin', 62],
-            ['Flobufen', 27],
-            ['MK-866', 24015],
-            ['BIM23A760', 1],
-            ['ABT-761', 6476]
+            ['Tacrolimus', 14923],
+            ['Cyclosporine', 25999],
+            ['Voclosporin', 31],
+            ['Pimecrolimus', 687]
           ]
         },
         {
@@ -75,6 +69,7 @@
       ],
       xAxis: {
         type: 'log',
+        logbase: 20,
         axisLabel: { show: false },
         splitLine: { show: false }
       },

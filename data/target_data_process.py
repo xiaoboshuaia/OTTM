@@ -1,6 +1,6 @@
 '''
 Date: 2022-10-31 17:40:44
-LastEditTime: 2022-11-09 22:44:22
+LastEditTime: 2022-11-10 10:19:06
 FilePath: \Project\OTTM\data\dataTodatabase.py
 
 将药物相关的信息储存到数据库中
@@ -223,6 +223,7 @@ uniprotId_to_geneName = get_geneID()
 
 '''
 # 通过循环来进行查询
+#TODO 后续需要加上AND判断语句
 def query(uni_ID,uni_Name):
     body = {
         'query':{
@@ -252,9 +253,12 @@ def FDA_approved_drug():
         else:
             re_target.append(i)
     dict1 = []
+    dict2 = []
     for i in unre_target:
-        dict1.append({'name' : i })    
-    return len(unre_target),unre_target,dict1 
+        dict1.append({'name' : i })
+    for i in re_target:
+        dict2.append({'name' : i})    
+    return len(unre_target),unre_target,dict1,dict2 
 
 # 获得Clinical trial阶段的靶标且没有研究过肝癌
 def Clinical_trial_drug():
@@ -276,9 +280,12 @@ def Clinical_trial_drug():
     len(cl_unre_target) 
 
     dict1 = []
+    dict2 = []
     for i in cl_unre_target:
         dict1.append({'name' : i })
-    return len(cl_unre_target),cl_unre_target,dict1
+    for i in cl_re_target:
+        dict2.append({'name' : i})
+    return len(cl_unre_target),cl_unre_target,dict1,dict2
 
 # 通过phase将药物进行分类
 def drug_classify(target_name):
@@ -418,16 +425,28 @@ if __name__ == '__main__':
 # hepatocellular carcinoma
 # 将有药物的target对于早期肺癌在进行一次筛选 找出没有研究过跟该疾病有关的靶标
     es = Elasticsearch(timeout=30, max_retries=10, retry_on_timeout=True)
-    es.search(index = 'abstract', query={})
 
 
 
+# LOX5
 drug_phase,drug_ap_cl,drug_ap,drug_cl = drug_classify('T00140')
 drug_a_not_relevant,drug_c_not_relevant,drug_not_relevant,drug_frequency = get_drug_frequency()
 
 drug_frequency
 
-query_Drug_frequency('WY-50295-tromethamine')
+# PPP3CA
+drug_phase,drug_ap_cl,drug_ap,drug_cl = drug_classify('T25464')
+drug_a_not_relevant,drug_c_not_relevant,drug_not_relevant,drug_frequency = get_drug_frequency()
+
+drug_frequency = []
+for i in drug_ap_cl:
+    number = query_Drug_frequency(i)
+    drug_frequency.append(number)
+
+PPP3CA_drug_frequency = []
+for i in range(len(drug_ap_cl)):
+    PPP3CA_drug_frequency.append([drug_ap_cl[i],drug_frequency[i]])
+    
 
 
 c= []
@@ -445,6 +464,49 @@ a = drug_frequency_list()
 
 
 #TODO 明天将整个target树进行补全，后续对于每个target对应的药物做同样的处理
+
+a,b,c,d = FDA_approved_drug()
+
+
+e,f,g,h = Clinical_trial_drug()
+
+
+for key,value in uniprotId_to_geneName.items():
+    if value == 'PPP1CA':
+        print(key)
+        break
+
+geneName_to_uniprotId.keys()
+
+
+
+a = ['PARP1','FYN','FOLR1','ALB','ADRB2','TACR1','PPP1CA','BRD2','Lyn',
+    'BRD9','SMYD2','PPP3CA','CYP17A1']
+
+
+for i in a:
+    if i in geneName_to_uniprotId.keys():
+        print(i)
+        
+uniPortId_to_uniPorName['Q08209']  
+        
+geneName_to_uniprotId['PPP3CA']
+
+uniPortName_to_target['PP2BA']
+
+# 实验使用的能在组学数据中找到的靶标
+# BRD2 cl-re
+# BRD9 research
+# SMYD2 research
+# PPP3CA  PP2BA FDA approved not relevant
+# CYP17A1 CP17A   FDA approved not relevant
+'T89041' in target_FDA_approved
+
+
+
+
+
+
 
 
 
