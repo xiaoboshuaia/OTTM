@@ -1,0 +1,114 @@
+<!--
+	此示例下载自 https://echarts.apache.org/examples/zh/editor.html?c=data-transform-sort-bar
+-->
+<!DOCTYPE html>
+<html lang="zh-CN" style="height: 100%">
+
+<head>
+  <meta charset="utf-8">
+</head>
+
+<body style="height: 100%; margin: 0">
+  <div id="container" style="height: 100%"></div>
+
+
+  <script type="text/javascript" src="https://fastly.jsdelivr.net/npm/echarts@5.4.0/dist/echarts.min.js"></script>
+  <!-- Uncomment this line if you want to dataTool extension
+  <script type="text/javascript" src="https://fastly.jsdelivr.net/npm/echarts@5.4.0/dist/extension/dataTool.min.js"></script>
+  -->
+  <!-- Uncomment this line if you want to use gl extension
+  <script type="text/javascript" src="https://fastly.jsdelivr.net/npm/echarts-gl@2/dist/echarts-gl.min.js"></script>
+  -->
+  <!-- Uncomment this line if you want to echarts-stat extension
+  <script type="text/javascript" src="https://fastly.jsdelivr.net/npm/echarts-stat@latest/dist/ecStat.min.js"></script>
+  -->
+  <!-- Uncomment this line if you want to use map
+  <script type="text/javascript" src="https://fastly.jsdelivr.net/npm/echarts@4.9.0/map/js/china.js"></script>
+  <script type="text/javascript" src="https://fastly.jsdelivr.net/npm/echarts@4.9.0/map/js/world.js"></script>
+  -->
+  <!-- Uncomment these two lines if you want to use bmap extension
+  <script type="text/javascript" src="https://api.map.baidu.com/api?v=3.0&ak=YOUR_API_KEY"></script>
+  <script type="text/javascript" src="https://fastly.jsdelivr.net/npm/echarts@5.4.0/dist/extension/bmap.min.js"></script>
+  -->
+
+  <script type="text/javascript">
+    var dom = document.getElementById('container');
+    var myChart = echarts.init(dom, null, {
+      renderer: 'canvas',
+      useDirtyRect: false
+    });
+    var app = {};
+
+    var option;
+
+    option = {
+      dataset: [
+        {
+          dimensions: ['drug', 'frequency'],
+          source: [
+            ['Tipelukast', 1],
+            ['WY-50295-tromethamine', 2144],
+            ['CMI-392', 10522],
+            ['TA-270', 53111],
+            ['BF-389', 19924],
+            ['UCB-35440', 2887],
+            ['Rilopirox', 16],
+            ['TENIDAP', 153],
+            ['SKF-105809', 4987],
+            ['PF-4191834', 20872],
+            ['FPL-62064', 1333],
+            ['PTC299', 8],
+            ['Darbufelone', 7],
+            ['Tepoxalin', 62],
+            ['Flobufen', 27],
+            ['MK-866', 24015],
+            ['BIM23A760', 1],
+            ['ABT-761', 6476]
+          ]
+        },
+        {
+          transform: {
+            type: 'sort',
+            config: { dimension: 'frequency', order: 'desc' }
+          }
+        }
+      ],
+      xAxis: {
+        type: 'log',
+        axisLabel: { show: false },
+        splitLine: { show: false }
+      },
+      yAxis: {
+        type: 'category',
+        inverse: true,
+        axisLabel: {
+          fontSize: 15,
+          color: '#48466d',
+          fontWeight: 'bold'
+        },
+      },
+      series: {
+        realtimeSort: true,
+        type: 'bar',
+        datasetIndex: 1,
+        label: {
+          show: true,
+          position: 'right',
+          offset: [10, 0],
+          color: '#48466d',
+          fontSize: 20,
+          fontWeight: 'bold'
+        },
+
+      }
+    };
+
+    if (option && typeof option === 'object') {
+      myChart.setOption(option);
+    }
+
+    window.addEventListener('resize', myChart.resize);
+  </script>
+</body>
+
+</html>
