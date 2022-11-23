@@ -7,11 +7,11 @@
 
 </head>
 <body>
-    <div id="55a163fa7f4340ffbf8b30e9c79bd7cb" class="chart-container" style="width:1400px; height:1000px;margin: 0 auto;"></div>
+    <div id="4b11515c265a44b289fcdaf745000d22" class="chart-container" style="width:1200px; height:1200px;"></div>
     <script>
-        var chart_55a163fa7f4340ffbf8b30e9c79bd7cb = echarts.init(
-            document.getElementById('55a163fa7f4340ffbf8b30e9c79bd7cb'), 'white', {renderer: 'svg'});
-        var option_55a163fa7f4340ffbf8b30e9c79bd7cb = {
+        var chart_4b11515c265a44b289fcdaf745000d22 = echarts.init(
+            document.getElementById('4b11515c265a44b289fcdaf745000d22'), 'white', {renderer: 'canvas'});
+        var option_4b11515c265a44b289fcdaf745000d22 = {
     "animation": true,
     "animationThreshold": 2000,
     "animationDuration": 1000,
@@ -456,7 +456,7 @@
                             },
                             "children": [
                                 {
-                                    "name": "F-16-IL-2 fusion \n protein",
+                                    "name": "F-16-IL-2 fusion protein",
                                     "value": 1,
                                     "itemStyle": {
                                         "color": "#73c0de"
@@ -536,8 +536,8 @@
                 "50%"
             ],
             "radius": [
-                "0%",
-                "75%"
+                0,
+                "95%"
             ],
             "highlightPolicy": "ancestor",
             "nodeClick": "rootToNode",
@@ -556,14 +556,14 @@
                 },
                 {
                     "r0": "35%",
-                    "r": "70%",
+                    "r": "60%",
                     "label": {
                         "align": "right"
                     }
                 },
                 {
-                    "r0": "70%",
-                    "r": "72%",
+                    "r0": "60%",
+                    "r": "62%",
                     "label": {
                         "position": "outside",
                         "padding": 3,
@@ -578,9 +578,9 @@
                 "show": true,
                 "position": "top",
                 "color": "black",
-                "margin": 10,
+                "margin": 8,
                 "fontSize": 15,
-                "fontStyle": "bold",
+                "fontWeight": "bold",
                 "fontFamily": "Microsoft YaHei",
                 "formatter": "{b}"
             },
@@ -595,7 +595,12 @@
     "legend": [
         {
             "data": [],
-            "selected": {}
+            "selected": {},
+            "show": true,
+            "padding": 5,
+            "itemGap": 10,
+            "itemWidth": 25,
+            "itemHeight": 14
         }
     ],
     "tooltip": {
@@ -614,9 +619,17 @@
         },
         "borderWidth": 0,
         "padding": 5
-    }
+    },
+    "title": [
+        {
+            "text": "Suggestions for drug targets",
+            "left": "center",
+            "padding": 5,
+            "itemGap": 10
+        }
+    ]
 };
-        chart_55a163fa7f4340ffbf8b30e9c79bd7cb.setOption(option_55a163fa7f4340ffbf8b30e9c79bd7cb);
+        chart_4b11515c265a44b289fcdaf745000d22.setOption(option_4b11515c265a44b289fcdaf745000d22);
     </script>
 </body>
 </html>
